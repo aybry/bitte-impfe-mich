@@ -6,7 +6,7 @@ This script calls `https://api.impfstoff.link/?robot=1` once a second to see if 
 Using this script might save you a couple of seconds compared to using the website manually. That could be the difference you need.
 
 ## Run the script
-To set the script going, simply run:
+To set the script going, simply open up a terminal in the repo's directory, and run:
 
 ```
 python bitte_impfe_mich.py
