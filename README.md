@@ -1,5 +1,5 @@
 # Bitte impfe mich! Please vaccinate me!
-This is a Python bot that utilises the [impfstoff.link](https://impfstoff.link/) API to get you a vaccination appointment.
+This is a Python script that utilises the [impfstoff.link](https://impfstoff.link/) API to get you a vaccination appointment.
 
 This script calls `https://api.impfstoff.link/?robot=1` once a second to see if any new appointments have been found by the API's backend. If a new appointment is found, the corresponding Doctolib link is opened automatically in a new tab.
 
