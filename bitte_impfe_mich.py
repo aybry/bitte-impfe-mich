@@ -50,26 +50,25 @@ def get_me_geimpft():
         for date in iz_dict["stats"]:
             identifier = "_".join((iz, date))
             if not DATA.get(identifier):
-                DATA[identifier] = iz_dict["stats"][date]["count"]
-            elif iz_dict["stats"][date]["count"] > DATA[identifier]:
-                DATA[identifier] = iz_dict["stats"][date]["count"]
+                DATA[identifier] = iz_dict["stats"][date]["last"]
+            elif iz_dict["stats"][date]["last"] > DATA[identifier]:
+                DATA[identifier] = iz_dict["stats"][date]["last"]
                 if time.time() - ZENTREN[iz]["last_opened"] > 10:
                     logging.info(f"Opening {iz}")
-                    webbrowser.open_new_tab(ZENTREN[iz]["link"])
+                    webbrowser.open(ZENTREN[iz]["link"])
                     ZENTREN[iz]["last_opened"] = time.time()
                 else:
                     logging.info(f"{iz} is already open")
 
     logging.debug("Done")
-    time.sleep(1)
+    time.sleep(1.1)
 
 
 while True:
     try:
-        if COUNTER % 10 == 0:
+        if COUNTER % 50 == 0:
             logging.info(f"Fetched {COUNTER} times")
         get_me_geimpft()
         COUNTER += 1
     except Exception as e:
         logging.info(e)
-
