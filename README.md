@@ -12,7 +12,7 @@ To set the script going, simply open up a terminal in the repo's directory, and 
 python bitte_impfe_mich.py
 ```
 
-The script should work on all Python 3 versions (written and tested on 3.8.5).
+The script should work on all versions of Python 3.6+ (written and tested on 3.8.5).
 
 If you make adjustments, please respect the API's rate limit of _1 request per second_. Feel free to share your improvements by opening a merge request.
 
