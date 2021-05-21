@@ -2,6 +2,7 @@ import requests
 import time
 import logging
 import webbrowser
+import os
 
 
 logging.basicConfig(level=logging.INFO)
@@ -34,6 +35,8 @@ ZENTREN = {
     },
 }
 
+IGNORE = ()
+
 
 DATA = {}
 COUNTER = 0
@@ -54,8 +57,16 @@ def get_me_geimpft():
             elif iz_dict["stats"][date]["last"] > DATA[identifier]:
                 DATA[identifier] = iz_dict["stats"][date]["last"]
                 if time.time() - ZENTREN[iz]["last_opened"] > 10:
-                    logging.info(f"Opening {iz}")
-                    webbrowser.open(ZENTREN[iz]["link"])
+                    logging.info(f"{iz} has new appointments...")
+                    if iz in IGNORE:
+                        logging.info(f"Ignoring {iz}.")
+                    else:
+                        logging.info(f"Opening {ZENTREN[iz]['link']}")
+                        webbrowser.open(ZENTREN[iz]["link"])
+                        for _ in range(3):
+                            print("\007")
+                            time.sleep(0.15)
+
                     ZENTREN[iz]["last_opened"] = time.time()
                 else:
                     logging.info(f"{iz} is already open")
