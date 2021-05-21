@@ -35,7 +35,10 @@ ZENTREN = {
     },
 }
 
-IGNORE = ()
+IGNORE = (
+    # "erika",
+    # "tempelhof",
+)
 
 
 DATA = {}
