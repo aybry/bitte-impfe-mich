@@ -10,7 +10,7 @@ import os
 # The latest possible date for your first appointment.
 # If an availability is found but the date is later than `LATEST_DATE`,
 # the availability will be ignored and the tab won't be opened.
-LATEST_DATE = "2021-06-20"  # e.g. "2021-06-19"
+LATEST_DATE = "2023-01-01"  # e.g. "2021-06-19"
 
 # The following vaccination centres will be ignored (if e.g. you explicitly
 # need a non-vector vaccine or cannot travel far).
@@ -18,7 +18,7 @@ IGNORE = (
     # "arena"
     # "messe"
     # "erika"
-    "tempelhof"
+    # "tempelhof"
     # "velodrom"
     # "tegel"
 )
@@ -26,7 +26,7 @@ IGNORE = (
 ##### End user options #####
 
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format="%(levelname)s - %(asctime)s - %(message)s")
 
 
@@ -67,7 +67,7 @@ COUNTER = 0
 
 def get_me_geimpft():
     r = requests.get("https://api.impfstoff.link/?robot=1",
-                     timeout=1).json()["stats"]
+                     timeout=3).json()["stats"]
 
     logging.debug("fetched")
 
