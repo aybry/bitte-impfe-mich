@@ -92,8 +92,8 @@ def check_impfzentrum(api_iz_dict):
                     if iz in IGNORE:
                         logging.info(f"Ignoring {iz}.")
                     else:
-                        logging.info(f"Opening {API_URL.format(ZENTREN[iz]['id'])}")
-                        webbrowser.open(API_URL.format(ZENTREN[iz]["id"]))
+                        logging.info(f"Opening {API_URL.format(iz_id=ZENTREN[iz]['id'])}")
+                        webbrowser.open(API_URL.format(iz_id=ZENTREN[iz]["id"]))
                         for _ in range(1):
                             print("\007")
                             time.sleep(0.15)
