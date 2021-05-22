@@ -5,40 +5,60 @@ import webbrowser
 import os
 
 
-logging.basicConfig(level=logging.INFO)
+##### Start user options #####
+
+# The latest possible date for your first appointment.
+# If an availability is found but the date is later than `LATEST_DATE`,
+# the availability will be ignored and the tab won't be opened.
+LATEST_DATE = "2030-01-01"  # e.g. "2021-06-19"
+
+# The following vaccination centres will be ignored (if e.g. you explicitly
+# need a non-vector vaccine or cannot travel far).
+IGNORE = (
+    # "arena"
+    # "messe"
+    # "erika"
+    # "tempelhof"
+    # "velodrom"
+    # "tegel"
+)
+
+##### End user options #####
+
+
+logging.basicConfig(level=logging.INFO,
+                    format="%(levelname)s - %(asctime)s - %(message)s")
+
+
+API_URL = "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-{iz_id}"
 
 
 ZENTREN = {
     "arena": {
-        "link": "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-158431",
-        "last_opened": 0
+        "last_opened": 0,
+        "id": "158431",
     },
     "messe": {
-        "link": "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-158434",
-        "last_opened": 0
+        "last_opened": 0,
+        "id": "158434",
     },
     "erika": {
-        "link": "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-158437",
-        "last_opened": 0
+        "last_opened": 0,
+        "id": "158437",
     },
     "tempelhof": {
-        "link": "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-158433",
-        "last_opened": 0
+        "last_opened": 0,
+        "id": "158433",
     },
     "velodrom": {
-        "link": "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-158435",
-        "last_opened": 0
+        "last_opened": 0,
+        "id": "158435",
     },
     "tegel": {
-        "link": "https://www.doctolib.de/institut/berlin/ciz-berlin-berlin?pid=practice-158436",
-        "last_opened": 0
+        "last_opened": 0,
+        "id": "158436",
     },
 }
-
-IGNORE = (
-    # "erika",
-    # "tempelhof",
-)
 
 
 DATA = {}
@@ -50,32 +70,39 @@ def get_me_geimpft():
 
     logging.debug("fetched")
 
-    for iz_dict in r:
-        iz = iz_dict["id"]
+    for api_iz_dict in r:
+        check_impfzentrum(api_iz_dict)
+    logging.debug("Done")
+    time.sleep(1.1)
 
-        for date in iz_dict["stats"]:
-            identifier = "_".join((iz, date))
-            if not DATA.get(identifier):
-                DATA[identifier] = iz_dict["stats"][date]["last"]
-            elif iz_dict["stats"][date]["last"] > DATA[identifier]:
-                DATA[identifier] = iz_dict["stats"][date]["last"]
-                if time.time() - ZENTREN[iz]["last_opened"] > 10:
-                    logging.info(f"{iz} has new appointments...")
+
+def check_impfzentrum(api_iz_dict):
+    iz = api_iz_dict["id"]
+
+    for date in api_iz_dict["stats"]:
+        identifier = "_".join((iz, date))
+        if not DATA.get(identifier):
+            DATA[identifier] = api_iz_dict["stats"][date]["last"]
+        elif api_iz_dict["stats"][date]["last"] > DATA[identifier]:
+            DATA[identifier] = api_iz_dict["stats"][date]["last"]
+            if (time.time() - ZENTREN[iz]["last_opened"] > 20):
+                if date <= LATEST_DATE:
+                    logging.info(f"Date {date} is good!")
+                    logging.info(f"{iz} has new appointments on {date}...")
                     if iz in IGNORE:
                         logging.info(f"Ignoring {iz}.")
                     else:
                         logging.info(f"Opening {ZENTREN[iz]['link']}")
-                        webbrowser.open(ZENTREN[iz]["link"])
-                        for _ in range(3):
+                        webbrowser.open(API_URL.format(ZENTREN[iz]["id"]))
+                        for _ in range(1):
                             print("\007")
                             time.sleep(0.15)
-
-                    ZENTREN[iz]["last_opened"] = time.time()
+                        ZENTREN[iz]["last_opened"] = time.time()
+                        return
                 else:
-                    logging.info(f"{iz} is already open")
-
-    logging.debug("Done")
-    time.sleep(1.1)
+                    logging.info(f"Date {date} is too late")
+            else:
+                logging.info(f"{iz} is already open")
 
 
 while True:
