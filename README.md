@@ -1,7 +1,7 @@
 # Bitte impfe mich! Please vaccinate me!
 This is a Python script that utilises the [impfstoff.link](https://impfstoff.link/) API to get you a vaccination appointment.
 
-This script calls `https://api.impfstoff.link/?robot=1` once every 1.5 seconds to see if any new appointments have been found by the API's backend. If a new appointment is found, the corresponding Doctolib link is opened automatically in a new tab.
+This script calls `https://api.impfstoff.link/?robot=1` once every second (or so) to see if any new appointments have been found by the API's backend. If a new appointment is found, the corresponding Doctolib link is opened automatically in a new tab.
 
 Using this script might save you a couple of seconds compared to using the website manually. That could be the difference you need.
 
